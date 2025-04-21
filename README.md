@@ -1,0 +1,57 @@
+# Terraform AWS VPC Module
+
+This module creates a VPC with public and private subnets in an AWS environment.
+
+## Features
+
+- Creates a VPC with configurable CIDR block
+- Creates public and private subnets across multiple availability zones
+- Creates Internet Gateway for public subnets
+- Creates NAT Gateway for private subnets (optional)
+- Configurable DNS support and hostnames
+- Tagging support for all resources
+
+## Usage
+
+```hcl
+module "vpc" {
+  source = "./modules/vpc"
+
+  vpc_name = "my-vpc"
+  vpc_cidr = "10.0.0.0/16"
+
+  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnets = ["10.0.101.0/24", "10.0.102.0/24"]
+
+  enable_nat_gateway = true
+
+  tags = {
+    Environment = "production"
+    Terraform   = "true"
+  }
+}
+```
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|----------|
+| vpc_name | Name of the VPC | string | - | yes |
+| vpc_cidr | CIDR block for the VPC | string | - | yes |
+| enable_dns_hostnames | Should be true to enable DNS hostnames in the VPC | bool | true | no |
+| enable_dns_support | Should be true to enable DNS support in the VPC | bool | true | no |
+| enable_nat_gateway | Should be true if you want to provision NAT Gateways for your private subnets | bool | true | no |
+| public_subnets | A list of public subnets inside the VPC | list(string) | [] | no |
+| private_subnets | A list of private subnets inside the VPC | list(string) | [] | no |
+| tags | A map of tags to add to all resources | map(string) | {} | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| vpc_id | The ID of the VPC |
+| vpc_cidr_block | The CIDR block of the VPC |
+| public_subnet_ids | List of IDs of public subnets |
+| private_subnet_ids | List of IDs of private subnets |
+| nat_gateway_ids | List of NAT Gateway IDs |
+| internet_gateway_id | The ID of the Internet Gateway | 
