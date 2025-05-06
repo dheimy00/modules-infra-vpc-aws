@@ -60,6 +60,7 @@ resource "aws_nat_gateway" "main" {
 
 # VPC Endpoints
 resource "aws_vpc_endpoint" "s3" {
+  count             = var.enable_s3_endpoint ? 1 : 0
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
   vpc_endpoint_type = "Gateway"
@@ -74,6 +75,7 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
+  count             = var.enable_dynamodb_endpoint ? 1 : 0
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.dynamodb"
   vpc_endpoint_type = "Gateway"
@@ -89,7 +91,7 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
 # Interface endpoints for other AWS services
 resource "aws_vpc_endpoint" "ssm" {
-  count             = var.enable_vpc_endpoints ? 1 : 0
+  count             = var.enable_ssm_endpoint ? 1 : 0
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.ssm"
   vpc_endpoint_type = "Interface"
@@ -108,7 +110,7 @@ resource "aws_vpc_endpoint" "ssm" {
 }
 
 resource "aws_vpc_endpoint" "ssmmessages" {
-  count             = var.enable_vpc_endpoints ? 1 : 0
+  count             = var.enable_ssmmessages_endpoint ? 1 : 0
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.ssmmessages"
   vpc_endpoint_type = "Interface"
@@ -127,7 +129,7 @@ resource "aws_vpc_endpoint" "ssmmessages" {
 }
 
 resource "aws_vpc_endpoint" "ec2messages" {
-  count             = var.enable_vpc_endpoints ? 1 : 0
+  count             = var.enable_ec2messages_endpoint ? 1 : 0
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.ec2messages"
   vpc_endpoint_type = "Interface"
@@ -147,7 +149,7 @@ resource "aws_vpc_endpoint" "ec2messages" {
 
 # Security group for VPC endpoints
 resource "aws_security_group" "vpc_endpoints" {
-  count       = var.enable_vpc_endpoints ? 1 : 0
+  count       = (var.enable_ssm_endpoint || var.enable_ssmmessages_endpoint || var.enable_ec2messages_endpoint) ? 1 : 0
   name        = "${var.vpc_name}-vpc-endpoints-sg"
   description = "Security group for VPC endpoints"
   vpc_id      = aws_vpc.main.id

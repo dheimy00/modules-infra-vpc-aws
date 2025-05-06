@@ -48,4 +48,34 @@ variable "enable_vpc_endpoints" {
   description = "Should be true if you want to provision VPC endpoints for AWS services"
   type        = bool
   default     = true
+}
+
+variable "enable_s3_endpoint" {
+  description = "Should be true if you want to provision S3 VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_dynamodb_endpoint" {
+  description = "Should be true if you want to provision DynamoDB VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ssm_endpoint" {
+  description = "Should be true if you want to provision SSM VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ssmmessages_endpoint" {
+  description = "Should be true if you want to provision SSM Messages VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ec2messages_endpoint" {
+  description = "Should be true if you want to provision EC2 Messages VPC endpoint"
+  type        = bool
+  default     = false
 } 
