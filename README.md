@@ -9,6 +9,7 @@ This module creates a VPC with public and private subnets in an AWS environment.
 - Creates Internet Gateway for public subnets
 - Creates NAT Gateway for private subnets (optional)
 - Configurable DNS support and hostnames
+- VPC Endpoints for AWS services (S3, DynamoDB, SSM, etc.)
 - Tagging support for all resources
 
 ## Usage
@@ -35,6 +36,9 @@ module "vpc" {
   # Enable NAT Gateway for private subnets
   enable_nat_gateway = true
 
+  # Enable VPC endpoints for AWS services
+  enable_vpc_endpoints = true
+
   # Enable DNS support and hostnames
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -56,6 +60,7 @@ module "vpc" {
 | enable_dns_hostnames | Should be true to enable DNS hostnames in the VPC | bool | true | no |
 | enable_dns_support | Should be true to enable DNS support in the VPC | bool | true | no |
 | enable_nat_gateway | Should be true if you want to provision NAT Gateways for your private subnets | bool | true | no |
+| enable_vpc_endpoints | Should be true if you want to provision VPC endpoints for AWS services | bool | true | no |
 | public_subnets | A list of public subnets inside the VPC | list(string) | [] | no |
 | private_subnets | A list of private subnets inside the VPC | list(string) | [] | no |
 | tags | A map of tags to add to all resources | map(string) | {} | no |

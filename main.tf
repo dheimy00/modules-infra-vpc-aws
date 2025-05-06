@@ -56,4 +56,116 @@ resource "aws_nat_gateway" "main" {
   )
 
   depends_on = [aws_internet_gateway.main]
-} 
+}
+
+# VPC Endpoints
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private[0].id]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-s3-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.dynamodb"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private[0].id]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-dynamodb-endpoint"
+    }
+  )
+}
+
+# Interface endpoints for other AWS services
+resource "aws_vpc_endpoint" "ssm" {
+  count             = var.enable_vpc_endpoints ? 1 : 0
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.ssm"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = aws_subnet.private[*].id
+
+  security_group_ids = [aws_security_group.vpc_endpoints[0].id]
+
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-ssm-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  count             = var.enable_vpc_endpoints ? 1 : 0
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.ssmmessages"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = aws_subnet.private[*].id
+
+  security_group_ids = [aws_security_group.vpc_endpoints[0].id]
+
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-ssmmessages-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  count             = var.enable_vpc_endpoints ? 1 : 0
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.ec2messages"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = aws_subnet.private[*].id
+
+  security_group_ids = [aws_security_group.vpc_endpoints[0].id]
+
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-ec2messages-endpoint"
+    }
+  )
+}
+
+# Security group for VPC endpoints
+resource "aws_security_group" "vpc_endpoints" {
+  count       = var.enable_vpc_endpoints ? 1 : 0
+  name        = "${var.vpc_name}-vpc-endpoints-sg"
+  description = "Security group for VPC endpoints"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-vpc-endpoints-sg"
+    }
+  )
+}
+
+# Get current region
+data "aws_region" "current" {} 
