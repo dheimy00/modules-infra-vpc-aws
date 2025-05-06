@@ -42,4 +42,10 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
+}
+
+variable "enable_vpc_endpoints" {
+  description = "Should be true if you want to provision VPC endpoints for AWS services"
+  type        = bool
+  default     = true
 } 
