@@ -78,4 +78,70 @@ variable "enable_ec2messages_endpoint" {
   description = "Should be true if you want to provision EC2 Messages VPC endpoint"
   type        = bool
   default     = false
+}
+
+variable "enable_ecr_api_endpoint" {
+  description = "Should be true if you want to provision ECR API VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ecr_dkr_endpoint" {
+  description = "Should be true if you want to provision ECR DKR VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sns_endpoint" {
+  description = "Should be true if you want to provision SNS VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sqs_endpoint" {
+  description = "Should be true if you want to provision SQS VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_secretsmanager_endpoint" {
+  description = "Should be true if you want to provision Secrets Manager VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_cloudwatch_logs_endpoint" {
+  description = "Enable CloudWatch Logs VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_cloudwatch_monitoring_endpoint" {
+  description = "Enable CloudWatch Monitoring VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_kms_endpoint" {
+  description = "Enable KMS VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ecr_public_endpoint" {
+  description = "Enable ECR Public VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_stepfunctions_endpoint" {
+  description = "Enable Step Functions VPC endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_lambda_endpoint" {
+  description = "Enable Lambda VPC endpoint"
+  type        = bool
+  default     = false
 } 
