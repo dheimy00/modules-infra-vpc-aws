@@ -8,6 +8,18 @@ variable "vpc_cidr" {
   type        = string
 }
 
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+  default     = "default"
+}
+
 variable "enable_dns_hostnames" {
   description = "Should be true to enable DNS hostnames in the VPC"
   type        = bool

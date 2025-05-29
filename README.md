@@ -9,6 +9,7 @@ This Terraform module creates a VPC with the following features:
 - Route tables for public and private subnets
 - VPC Endpoints for various AWS services
 - Security groups for VPC endpoints
+- Consistent resource tagging across all resources
 
 ## Usage
 
@@ -19,8 +20,13 @@ module "vpc" {
   vpc_name = "my-vpc"
   vpc_cidr = "10.0.0.0/16"
 
-  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
+  # Environment and project configuration
+  environment  = "prod"
+  project_name = "my-project"
+  
+  # Network configuration
+  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  private_subnets = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
   enable_nat_gateway = true
 
@@ -41,6 +47,7 @@ module "vpc" {
   enable_ecr_public_endpoint     = true
   enable_stepfunctions_endpoint  = true
 
+  # Additional tags for all resources
   tags = {
     Environment = "production"
     Project     = "my-project"
@@ -61,12 +68,14 @@ module "vpc" {
 |------|-------------|------|---------|:--------:|
 | vpc_name | Name of the VPC | `string` | n/a | yes |
 | vpc_cidr | CIDR block for the VPC | `string` | n/a | yes |
+| environment | Environment name (e.g., dev, staging, prod) | `string` | `"dev"` | no |
+| project_name | Name of the project | `string` | `"default"` | no |
 | enable_dns_hostnames | Should be true to enable DNS hostnames in the VPC | `bool` | `true` | no |
 | enable_dns_support | Should be true to enable DNS support in the VPC | `bool` | `true` | no |
 | enable_nat_gateway | Should be true if you want to provision NAT Gateways for your private subnets | `bool` | `true` | no |
 | public_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | private_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
-| tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
+| tags | A map of additional tags to add to all resources | `map(string)` | `{}` | no |
 | enable_vpc_endpoints | Should be true if you want to provision VPC endpoints for AWS services | `bool` | `true` | no |
 | enable_s3_endpoint | Should be true if you want to provision S3 VPC endpoint | `bool` | `false` | no |
 | enable_dynamodb_endpoint | Should be true if you want to provision DynamoDB VPC endpoint | `bool` | `false` | no |
@@ -102,9 +111,27 @@ module "vpc" {
 | ecr_public_endpoint_id | The ID of the ECR Public VPC endpoint |
 | stepfunctions_endpoint_id | The ID of the Step Functions VPC endpoint |
 
-## Security
+## Resource Tagging
 
-The module creates a security group for VPC endpoints that allows inbound HTTPS (port 443) traffic from within the VPC CIDR block.
+All resources created by this module are tagged with the following default tags:
+
+- `Name`: Resource-specific name (e.g., "my-vpc", "my-vpc-public-0", etc.)
+- `Environment`: Value from `var.environment` (default: "dev")
+- `Project`: Value from `var.project_name` (default: "default")
+
+Additional tags can be provided through the `tags` variable, which will be merged with the default tags.
+
+Example of resource tags:
+```hcl
+{
+  Name        = "my-vpc-public-0"
+  Environment = "prod"
+  Project     = "my-project"
+  Owner       = "DevOps Team"
+  CostCenter  = "12345"
+  ManagedBy   = "Terraform"
+}
+```
 
 ## Notes
 
@@ -114,6 +141,8 @@ The module creates a security group for VPC endpoints that allows inbound HTTPS 
 - The module supports multiple Availability Zones through the subnet configuration
 - The SSM endpoint (`enable_ssm_endpoint`) provides access to Systems Manager, Parameter Store, and Session Manager services
 - The ECR API endpoint (`enable_ecr_api_endpoint`) provides access to both ECR API and login functionality
+- Subnets are automatically created in available AZs in the current region
+- All resources are consistently tagged for better resource management and cost allocation
 
 ## License
 
