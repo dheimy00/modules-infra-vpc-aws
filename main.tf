@@ -15,7 +15,43 @@ resource "aws_vpc" "main" {
   tags = merge(
     var.tags,
     {
-      Name = var.vpc_name
+      Name        = var.vpc_name
+      Environment = var.environment
+      Project     = var.project_name
+    }
+  )
+}
+
+resource "aws_subnet" "public" {
+  count                   = length(var.public_subnets)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnets[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.vpc_name}-public-${count.index}"
+      Environment = var.environment
+      Project     = var.project_name
+    }
+  )
+}
+
+resource "aws_subnet" "private" {
+  count                   = length(var.private_subnets)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_subnets[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = false
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.vpc_name}-private-${count.index}"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -26,7 +62,9 @@ resource "aws_internet_gateway" "main" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-igw"
+      Name        = "${var.vpc_name}-igw"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -38,7 +76,9 @@ resource "aws_eip" "nat" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-nat-eip-${count.index}"
+      Name        = "${var.vpc_name}-nat-eip-${count.index}"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -51,7 +91,9 @@ resource "aws_nat_gateway" "main" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-nat-${count.index}"
+      Name        = "${var.vpc_name}-nat-${count.index}"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 
@@ -69,7 +111,9 @@ resource "aws_vpc_endpoint" "s3" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-s3-endpoint"
+      Name        = "${var.vpc_name}-s3-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -84,7 +128,9 @@ resource "aws_vpc_endpoint" "dynamodb" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-dynamodb-endpoint"
+      Name        = "${var.vpc_name}-dynamodb-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -104,7 +150,9 @@ resource "aws_vpc_endpoint" "ssm" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-ssm-endpoint"
+      Name        = "${var.vpc_name}-ssm-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -123,7 +171,9 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-ssmmessages-endpoint"
+      Name        = "${var.vpc_name}-ssmmessages-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -142,7 +192,9 @@ resource "aws_vpc_endpoint" "ec2messages" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-ec2messages-endpoint"
+      Name        = "${var.vpc_name}-ec2messages-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -158,7 +210,9 @@ resource "aws_vpc_endpoint" "ecr_api" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-ecr-api-endpoint"
+      Name        = "${var.vpc_name}-ecr-api-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -174,7 +228,9 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-ecr-dkr-endpoint"
+      Name        = "${var.vpc_name}-ecr-dkr-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -191,7 +247,9 @@ resource "aws_vpc_endpoint" "sns" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-sns-endpoint"
+      Name        = "${var.vpc_name}-sns-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -208,7 +266,9 @@ resource "aws_vpc_endpoint" "sqs" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-sqs-endpoint"
+      Name        = "${var.vpc_name}-sqs-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -225,7 +285,9 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-secretsmanager-endpoint"
+      Name        = "${var.vpc_name}-secretsmanager-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -242,7 +304,9 @@ resource "aws_vpc_endpoint" "cloudwatch_logs" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-cloudwatch-logs-endpoint"
+      Name        = "${var.vpc_name}-cloudwatch-logs-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -259,7 +323,9 @@ resource "aws_vpc_endpoint" "cloudwatch_monitoring" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-cloudwatch-monitoring-endpoint"
+      Name        = "${var.vpc_name}-cloudwatch-monitoring-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -276,7 +342,9 @@ resource "aws_vpc_endpoint" "kms" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-kms-endpoint"
+      Name        = "${var.vpc_name}-kms-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -293,7 +361,9 @@ resource "aws_vpc_endpoint" "ecr_public" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-ecr-public-endpoint"
+      Name        = "${var.vpc_name}-ecr-public-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -310,7 +380,9 @@ resource "aws_vpc_endpoint" "stepfunctions" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-stepfunctions-endpoint"
+      Name        = "${var.vpc_name}-stepfunctions-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -327,7 +399,9 @@ resource "aws_vpc_endpoint" "lambda" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-lambda-endpoint"
+      Name        = "${var.vpc_name}-lambda-endpoint"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }
@@ -364,7 +438,9 @@ resource "aws_security_group" "vpc_endpoints" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.vpc_name}-vpc-endpoints-sg"
+      Name        = "${var.vpc_name}-vpc-endpoints-sg"
+      Environment = var.environment
+      Project     = var.project_name
     }
   )
 }

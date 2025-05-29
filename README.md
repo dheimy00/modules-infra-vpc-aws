@@ -19,8 +19,11 @@ module "vpc" {
   vpc_name = "my-vpc"
   vpc_cidr = "10.0.0.0/16"
 
-  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
+  environment        = "prod"
+  project_name       = "my-project"
+  availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  public_subnets    = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  private_subnets   = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
   enable_nat_gateway = true
 
@@ -61,6 +64,10 @@ module "vpc" {
 |------|-------------|------|---------|:--------:|
 | vpc_name | Name of the VPC | `string` | n/a | yes |
 | vpc_cidr | CIDR block for the VPC | `string` | n/a | yes |
+| environment | Environment name (e.g., dev, staging, prod) | `string` | `"dev"` | no |
+| project_name | Name of the project | `string` | `"default"` | no |
+| availability_zones | List of availability zones to use for subnets | `list(string)` | `[]` | no |
+| map_public_ip_on_launch | Should be true if you want to auto-assign public IP on launch | `bool` | `true` | no |
 | enable_dns_hostnames | Should be true to enable DNS hostnames in the VPC | `bool` | `true` | no |
 | enable_dns_support | Should be true to enable DNS support in the VPC | `bool` | `true` | no |
 | enable_nat_gateway | Should be true if you want to provision NAT Gateways for your private subnets | `bool` | `true` | no |
@@ -114,6 +121,9 @@ The module creates a security group for VPC endpoints that allows inbound HTTPS 
 - The module supports multiple Availability Zones through the subnet configuration
 - The SSM endpoint (`enable_ssm_endpoint`) provides access to Systems Manager, Parameter Store, and Session Manager services
 - The ECR API endpoint (`enable_ecr_api_endpoint`) provides access to both ECR API and login functionality
+- Make sure the number of availability zones matches the number of public and private subnets
+- Public subnets can be configured to automatically assign public IP addresses to instances launched in them using `map_public_ip_on_launch`
+- All resources are tagged with Environment and Project name for better resource management
 
 ## License
 
