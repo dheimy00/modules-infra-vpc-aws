@@ -147,9 +147,209 @@ resource "aws_vpc_endpoint" "ec2messages" {
   )
 }
 
+resource "aws_vpc_endpoint" "ecr_api" {
+  count               = var.enable_ecr_api_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-ecr-api-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  count               = var.enable_ecr_dkr_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-ecr-dkr-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "sns" {
+  count               = var.enable_sns_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.sns"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-sns-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "sqs" {
+  count               = var.enable_sqs_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.sqs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-sqs-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "secretsmanager" {
+  count               = var.enable_secretsmanager_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.secretsmanager"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-secretsmanager-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "cloudwatch_logs" {
+  count               = var.enable_cloudwatch_logs_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-cloudwatch-logs-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "cloudwatch_monitoring" {
+  count               = var.enable_cloudwatch_monitoring_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.monitoring"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-cloudwatch-monitoring-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "kms" {
+  count               = var.enable_kms_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.kms"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-kms-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "ecr_public" {
+  count               = var.enable_ecr_public_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.public"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-ecr-public-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "stepfunctions" {
+  count               = var.enable_stepfunctions_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.states"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-stepfunctions-endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "lambda" {
+  count               = var.enable_lambda_endpoint ? 1 : 0
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.lambda"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-lambda-endpoint"
+    }
+  )
+}
+
 # Security group for VPC endpoints
 resource "aws_security_group" "vpc_endpoints" {
-  count       = (var.enable_ssm_endpoint || var.enable_ssmmessages_endpoint || var.enable_ec2messages_endpoint) ? 1 : 0
+  count = (
+    var.enable_ssm_endpoint ||
+    var.enable_ssmmessages_endpoint ||
+    var.enable_ec2messages_endpoint ||
+    var.enable_ecr_api_endpoint ||
+    var.enable_ecr_dkr_endpoint ||
+    var.enable_sns_endpoint ||
+    var.enable_sqs_endpoint ||
+    var.enable_secretsmanager_endpoint ||
+    var.enable_cloudwatch_logs_endpoint ||
+    var.enable_cloudwatch_monitoring_endpoint ||
+    var.enable_kms_endpoint ||
+    var.enable_ecr_public_endpoint ||
+    var.enable_stepfunctions_endpoint ||
+    var.enable_lambda_endpoint
+  ) ? 1 : 0
   name        = "${var.vpc_name}-vpc-endpoints-sg"
   description = "Security group for VPC endpoints"
   vpc_id      = aws_vpc.main.id
