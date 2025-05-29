@@ -8,12 +8,6 @@ variable "vpc_cidr" {
   type        = string
 }
 
-variable "availability_zones" {
-  description = "List of availability zones to use for subnets"
-  type        = list(string)
-  default     = []
-}
-
 variable "environment" {
   description = "Environment name (e.g., dev, staging, prod)"
   type        = string
