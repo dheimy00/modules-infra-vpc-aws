@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
-}
-
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = var.enable_dns_hostnames
@@ -412,4 +403,4 @@ resource "aws_security_group" "vpc_endpoints" {
 }
 
 # Get current region
-data "aws_region" "current" {} 
+data "aws_region" "current" {}
