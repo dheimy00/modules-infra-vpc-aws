@@ -8,12 +8,12 @@ output "vpc_cidr_block" {
   value       = aws_vpc.main.cidr_block
 }
 
-output "public_subnet_ids" {
+output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public[*].id
 }
 
-output "private_subnet_ids" {
+output "private_subnets" {
   description = "List of IDs of private subnets"
   value       = aws_subnet.private[*].id
 }
@@ -66,4 +66,4 @@ output "stepfunctions_endpoint_id" {
 output "lambda_endpoint_id" {
   description = "The ID of the Lambda VPC endpoint"
   value       = var.enable_lambda_endpoint ? aws_vpc_endpoint.lambda[0].id : null
-} 
+}
