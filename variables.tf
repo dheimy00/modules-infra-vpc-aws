@@ -1,3 +1,8 @@
+variable "aws_region" {
+  description = "The AWS Region"
+  type        = string
+}
+
 variable "vpc_name" {
   description = "Name of the VPC"
   type        = string
@@ -156,4 +161,4 @@ variable "enable_lambda_endpoint" {
   description = "Enable Lambda VPC endpoint"
   type        = bool
   default     = false
-} 
+}
