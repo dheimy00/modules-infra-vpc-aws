@@ -66,4 +66,4 @@ output "stepfunctions_endpoint_id" {
 output "lambda_endpoint_id" {
   description = "The ID of the Lambda VPC endpoint"
   value       = var.enable_lambda_endpoint ? aws_vpc_endpoint.lambda[0].id : null
-} 
+}

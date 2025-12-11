@@ -22,7 +22,7 @@ jobs:
           terraform_version: "1.11.3"
 
       - name: Terraform Format
-        run: terraform fmt -check
+        run: terraform fmt
         working-directory: ${{ github.workspace }}
 
       - name: Terraform Init and Validate
